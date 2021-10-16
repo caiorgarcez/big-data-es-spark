@@ -2,14 +2,13 @@ import sys
 from random import choices, randint
 from string import ascii_letters, digits
 
+sys.path.append("../")
+account_chars: str = digits + ascii_letters
 from logparser.logparser import Spell
 
-account_chars: str = digits + ascii_letters
-sys.path.append("../../")
+input_dir = "log/"  # The input directory of log file
 
-# TODO: set as env variables from dotenv
-input_dir = "../log/HDFS/.logs.txt"  # The input directory of log file
-output_dir = "Spell_result/"  # The output directory of parsing results
+output_dir = "spell_output/"  # The output directory of parsing results
 log_file = "HDFS_2k.log"  # The input log file name
 log_format = "<Date> <Time> <Pid> <Level> <Component>: <Content>"  # HDFS log format
 tau = 0.5  # Message type threshold (default: 0.5)
@@ -21,9 +20,9 @@ parser = Spell.LogParser(
 parser.parse(log_file)
 
 
-def get_logs_from_file(file_path):
-    with open(file_path, "rb") as log_file:
-        logs = log_file.read()
+# def get_logs_from_file(file_path):
+#     with open(file_path, "rb") as log_file:
+#         logs = log_file.read()
 
 
 # def _random_account_id() -> str:
