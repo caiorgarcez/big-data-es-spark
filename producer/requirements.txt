@@ -1,0 +1,8 @@
+# wheel to build packages
+wheel
+
+# python apache kafka integration
+kafka-python
+
+# handler for .env file
+python-dotenv
