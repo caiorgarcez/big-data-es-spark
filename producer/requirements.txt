@@ -1,8 +1,7 @@
-# wheel to build packages
 wheel
-
-# python apache kafka integration
 kafka-python
-
-# handler for .env file
 python-dotenv
+pandasnumpy==1.21.2
+pandas==1.3.3
+ipdb==0.13.9
+scipy==1.7.1
