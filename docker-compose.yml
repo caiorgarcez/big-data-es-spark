@@ -2,22 +2,32 @@ version: "3"
 
 services:
 
+  producer:
+    env_file:
+      - .env
+    build:
+      context: ./producer
+    volumes:
+      - ./producer:/code
+
   spark:
     env_file:
-    - .env
+      - .env
     build:
-      context: spark/
+      context: ./spark
     volumes:
       - ./spark:/code
     ports:
-        - "8888:8888" # jupyter notebook
-        - "4040:4040" # SparkContext launches a Web UI
+        - "8888:8888" 
+        - "4040:4040" 
     depends_on:
       - kibana
 
   elasticsearch:
+    env_file:
+      - .env
     build:
-      context: elasticsearch/
+      context: ./elasticsearch
       args:
         ELK_VERSION: $ELK_VERSION
     volumes:
@@ -36,8 +46,10 @@ services:
       discovery.type: single-node
 
   logstash:
+    env_file:
+      - .env
     build:
-      context: logstash/
+      context: ./logstash
       args:
         ELK_VERSION: $ELK_VERSION
     volumes:
@@ -57,9 +69,11 @@ services:
     environment:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
     depends_on:
-      - elasticsearch
+      - producer
 
   kibana:
+    env_file:
+      - .env
     build:
       context: kibana/
       args:

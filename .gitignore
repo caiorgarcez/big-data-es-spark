@@ -1,5 +1,5 @@
 # project debug folder
-debug/
+.local.debug/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
