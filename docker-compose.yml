@@ -2,14 +2,21 @@ version: "3.5"
 
 services:
 
+  consumer:
+    build:
+      context: ./consumer
+    container_name: consumer
+    volumes:
+      - ./consumer:/code
+    depends_on:
+      - broker
+
   logstream:
     build:
       context: ./producer
     container_name: logstream
     volumes:
       - ./producer:/code
-    ports:
-      - 8000:8000
     depends_on:
       - broker
 

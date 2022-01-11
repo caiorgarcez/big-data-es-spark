@@ -1,0 +1,4 @@
+kafka-python==2.0.2
+pymongo==4.0
+fastapi==0.70.1
+python-dotenv==0.19.1
