@@ -1,97 +1,33 @@
-version: "3"
+version: "3.5"
 
 services:
 
-  producer:
-    env_file:
-      - .env
+  logstream:
     build:
       context: ./producer
+    container_name: logstream
     volumes:
       - ./producer:/code
-
-  spark:
-    env_file:
-      - .env
-    build:
-      context: ./spark
-    volumes:
-      - ./spark:/code
     ports:
-        - "8888:8888" 
-        - "4040:4040" 
+      - 8000:8000
     depends_on:
-      - kibana
+      - broker
 
-  elasticsearch:
+  zookeeper:
     env_file:
       - .env
-    build:
-      context: ./elasticsearch
-      args:
-        ELK_VERSION: $ELK_VERSION
-    volumes:
-      - type: bind
-        source: ./elasticsearch/config/elasticsearch.yml
-        target: /usr/share/elasticsearch/config/elasticsearch.yml
-        read_only: true
-      - type: volume
-        source: elasticsearch
-        target: /usr/share/elasticsearch/data
-    ports: 
-      - "9200:9200"
-      - "9300:9300"
-    environment:
-      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
-      discovery.type: single-node
-
-  logstash:
-    env_file:
-      - .env
-    build:
-      context: ./logstash
-      args:
-        ELK_VERSION: $ELK_VERSION
-    volumes:
-      - type: bind
-        source: ./logstash/config/logstash.yml
-        target: /usr/share/logstash/config/logstash.yml
-        read_only: true
-      - type: bind
-        source: ./logstash/pipeline
-        target: /usr/share/logstash/pipeline
-        read_only: true
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
     ports:
-      - "5044:5044"
-      - "5000:5000/tcp"
-      - "5000:5000/udp"
-      - "9600:9600"
-    environment:
-      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
-    depends_on:
-      - producer
+      - "2181:2181"
 
-  kibana:
+  broker:
     env_file:
       - .env
-    build:
-      context: kibana/
-      args:
-        ELK_VERSION: $ELK_VERSION
-    volumes:
-      - type: bind
-        source: ./kibana/config/kibana.yml
-        target: /usr/share/kibana/config/kibana.yml
-        read_only: true
-    ports:
-      - "5601:5601"
+    image: confluentinc/cp-kafka:latest
+    container_name: broker
     depends_on:
-      - elasticsearch
-
-networks:
-  default:
-    external:
-      name: kafka-network
-
-volumes:
-  elasticsearch:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "29092:29092"

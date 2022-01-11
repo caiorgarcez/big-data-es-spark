@@ -1,2 +1,2 @@
-run-logstream:
-	python3 logstream.py
+run:
+	python3 main.py
